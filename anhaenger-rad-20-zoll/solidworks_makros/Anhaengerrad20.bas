@@ -1,19 +1,19 @@
-Attribute VB_Name = "Laufrad28"
+Attribute VB_Name = "Anhaengerrad20"
 '==============================================================================
-' SolidWorks-Makro: Laufrad 28" (ETRTO 622) - kostenguenstige Ausfuehrung
+' SolidWorks-Makro: Fahrradanhaenger-Rad 20" (ETRTO 406) - kostenguenstig
 '
-'   LR28-001  Felge 622x19, einwandig, Aluminium, 36 Loch, Ventilloch AV
-'   LR28-002  Schlauch 28" Butyl mit AV-Ventil 40 mm
-'   LR28-003  Mantel (Drahtreifen) 37-622 / 28 x 1.40
-'   LR28-000  Baugruppe Laufrad (ohne Nabe/Speichen)
+'   AR20-001  Felge 406x19, einwandig, Aluminium, 36 Loch, Ventilloch AV
+'   AR20-002  Schlauch 20 x 1.75-2.125 Butyl mit AV-Ventil 35 mm
+'   AR20-003  Mantel (Drahtreifen) 47-406 / 20 x 1.75
+'   AR20-000  Baugruppe Anhaengerrad (ohne Nabe/Speichen)
 '   + je eine Zeichnung (Vorderansicht 1:5, Isometrie) als Startpunkt
 '
 ' Anwendung:
-'   1. SolidWorks starten, Extras > Makro > Neu... > z.B. "Laufrad28.swp" speichern
-'   2. Im VBA-Editor: Datei > Datei importieren... > diese Datei (Laufrad28.bas)
+'   1. SolidWorks starten, Extras > Makro > Neu... > z.B. "Anhaengerrad20.swp" speichern
+'   2. Im VBA-Editor: Datei > Datei importieren... > diese Datei (Anhaengerrad20.bas)
 '   3. Das automatisch angelegte leere Modul "Module1" darf geloescht werden
 '   4. Makro ausfuehren (F5) -> Sub "main"
-'   Ergebnis liegt im Unterordner "Laufrad28" neben der .swp-Datei.
+'   Ergebnis liegt im Unterordner "Anhaengerrad20" neben der .swp-Datei.
 '
 ' Koordinaten: Radachse = Z-Achse, Ventil bei +Y (12 Uhr). Masse in mm.
 ' Das Makro verwendet nur spaetes Binden (Object) und Zahlenkonstanten, damit
@@ -32,7 +32,7 @@ Private gProtokoll As String
 '------------------------------------------------------------------------------
 Sub main()
     Set swApp = Application.SldWorks
-    gOrdner = swApp.GetCurrentMacroPathFolder & "\Laufrad28\"
+    gOrdner = swApp.GetCurrentMacroPathFolder & "\Anhaengerrad20\"
     If Dir(gOrdner, vbDirectory) = "" Then MkDir gOrdner
     gProtokoll = ""
 
@@ -47,17 +47,17 @@ Sub main()
 
     pBg = ErzeugeBaugruppe(pFelge, pSchlauch, pMantel)
 
-    ErzeugeZeichnung pFelge, "LR28-001_Felge"
-    ErzeugeZeichnung pSchlauch, "LR28-002_Schlauch"
-    ErzeugeZeichnung pMantel, "LR28-003_Mantel"
-    If pBg <> "" Then ErzeugeZeichnung pBg, "LR28-000_Laufrad"
+    ErzeugeZeichnung pFelge, "AR20-001_Felge"
+    ErzeugeZeichnung pSchlauch, "AR20-002_Schlauch"
+    ErzeugeZeichnung pMantel, "AR20-003_Mantel"
+    If pBg <> "" Then ErzeugeZeichnung pBg, "AR20-000_Anhaengerrad"
 
     MsgBox "Fertig. Dateien in:" & vbCrLf & gOrdner & vbCrLf & vbCrLf & _
            "Hinweise:" & vbCrLf & IIf(gProtokoll = "", "(keine)", gProtokoll), vbInformation
 End Sub
 
 '==============================================================================
-' TEIL 1: FELGE  (LR28-001)
+' TEIL 1: FELGE  (AR20-001)
 '==============================================================================
 Private Function ErzeugeFelge() As String
     Dim doc As Object, sk As Object, koerper As Object, loch As Object
@@ -68,8 +68,8 @@ Private Function ErzeugeFelge() As String
 
     ' --- Profil (rechte Haelfte z>=0, wird gespiegelt): Paare (z, r) in mm
     Dim h As Variant
-    h = Array(0, 305, 4, 305, 5.5, 311, 9.5, 311, 9.5, 315.5, 9, 316, 9, 317, _
-              11.5, 317, 11.5, 309, 7, 309, 5.5, 303, 0, 303)
+    h = Array(0, 197, 4, 197, 5.5, 203, 9.5, 203, 9.5, 207.5, 9, 208, 9, 209, _
+              11.5, 209, 11.5, 201, 7, 201, 5.5, 195, 0, 195)
     Dim p() As Double
     p = Spiegeln(h)
 
@@ -82,11 +82,11 @@ Private Function ErzeugeFelge() As String
     koerper.Name = "Felgenkoerper"
 
     ' --- Ventilloch D8,5 bei 90 Grad (+Y)
-    If RadialeBohrung(doc, 90, 8.5, 295, 312, "Ventilloch") Is Nothing Then _
+    If RadialeBohrung(doc, 90, 8.5, 187, 204, "Ventilloch") Is Nothing Then _
         Fehler "Felge: Ventilloch fehlgeschlagen"
 
     ' --- Erstes Speichenloch D4,5 bei 95 Grad (5 Grad neben dem Ventil)
-    Set loch = RadialeBohrung(doc, 95, 4.5, 295, 312, "Speichenloch")
+    Set loch = RadialeBohrung(doc, 95, 4.5, 187, 204, "Speichenloch")
     If loch Is Nothing Then Fehler "Felge: Speichenloch fehlgeschlagen": GoTo Abschluss
 
     ' --- Referenzachse = Schnitt Ebene oben / Ebene rechts (= Radachse Z)
@@ -115,7 +115,7 @@ Private Function ErzeugeFelge() As String
     If muster Is Nothing Then
         ' Rueckfallebene: 35 weitere einzelne rotierte Schnitte
         For i = 1 To 35
-            RadialeBohrung doc, 95 + 10 * i, 4.5, 295, 312, "Speichenloch" & (i + 1)
+            RadialeBohrung doc, 95 + 10 * i, 4.5, 187, 204, "Speichenloch" & (i + 1)
         Next i
         Fehler "Felge: Kreismuster per API nicht moeglich - Loecher einzeln erzeugt"
     Else
@@ -124,12 +124,12 @@ Private Function ErzeugeFelge() As String
 
 Abschluss:
     Material doc, "6063-T6"
-    Eigenschaften doc, "Felge 622x19, 36 Loch, AV", "LR28-001", "EN AW-6063 T6"
-    ErzeugeFelge = Speichern(doc, "LR28-001_Felge.SLDPRT")
+    Eigenschaften doc, "Felge 406x19, 36 Loch, AV", "AR20-001", "EN AW-6063 T6"
+    ErzeugeFelge = Speichern(doc, "AR20-001_Felge.SLDPRT")
 End Function
 
 '==============================================================================
-' TEIL 2: SCHLAUCH  (LR28-002)
+' TEIL 2: SCHLAUCH  (AR20-002)
 '==============================================================================
 Private Function ErzeugeSchlauch() As String
     Dim doc As Object, sk As Object, f As Object
@@ -137,11 +137,11 @@ Private Function ErzeugeSchlauch() As String
     Set doc = NeuesDokument(8)
     If doc Is Nothing Then Exit Function
 
-    ' --- Schlauchkoerper: Kreisring D28 / Wand 0,9 um Radachse rotiert (Torus)
+    ' --- Schlauchkoerper: Kreisring D36,6 / Wand 1,0 um Radachse rotiert (Torus)
     SkizzeStarten doc, 3
-    Mittellinie doc, -20, 0, 20, 0
-    doc.SketchManager.CreateCircleByRadius 0, 330 * MM, 0, 14 * MM
-    doc.SketchManager.CreateCircleByRadius 0, 330 * MM, 0, 13.1 * MM
+    Mittellinie doc, -25, 0, 25, 0
+    doc.SketchManager.CreateCircleByRadius 0, 228.5 * MM, 0, 18.3 * MM
+    doc.SketchManager.CreateCircleByRadius 0, 228.5 * MM, 0, 17.3 * MM
     Set sk = SkizzeBeenden(doc, "Skizze_Schlauchquerschnitt")
     Set f = Rotation(doc, sk, False)
     If f Is Nothing Then Fehler "Schlauch: Rotation fehlgeschlagen": Exit Function
@@ -149,21 +149,21 @@ Private Function ErzeugeSchlauch() As String
 
     ' --- AV-Ventil (Schaft D8, Kappe D10) auf Ebene vorne um die Y-Achse rotiert
     Dim v As Variant, p() As Double
-    v = Array(0, 280, 5, 280, 5, 292, 4, 292, 4, 316.5, 0, 316.5)
+    v = Array(0, 174, 5, 174, 5, 186, 4, 186, 4, 210.7, 0, 210.7)
     p = Punkte(v)
     SkizzeStarten doc, 1
-    Mittellinie doc, 0, 270, 0, 325
+    Mittellinie doc, 0, 165, 0, 220
     Polygonzug doc, p
     Set sk = SkizzeBeenden(doc, "Skizze_Ventil")
     Set f = Rotation(doc, sk, False)
     If f Is Nothing Then Fehler "Schlauch: Ventil fehlgeschlagen" Else f.Name = "Ventil_AV"
 
-    Eigenschaften doc, "Schlauch 28"" AV 40 mm", "LR28-002", "Butylkautschuk IIR"
-    ErzeugeSchlauch = Speichern(doc, "LR28-002_Schlauch.SLDPRT")
+    Eigenschaften doc, "Schlauch 20"" AV 35 mm", "AR20-002", "Butylkautschuk IIR"
+    ErzeugeSchlauch = Speichern(doc, "AR20-002_Schlauch.SLDPRT")
 End Function
 
 '==============================================================================
-' TEIL 3: MANTEL  (LR28-003)
+' TEIL 3: MANTEL  (AR20-003)
 '==============================================================================
 Private Function ErzeugeMantel() As String
     Dim doc As Object, sk As Object, f As Object
@@ -172,45 +172,45 @@ Private Function ErzeugeMantel() As String
     Set doc = NeuesDokument(8)
     If doc Is Nothing Then Exit Function
 
-    za = Sqr(18.5 ^ 2 - (329.5 - 318.5) ^ 2)     ' 14,874 (Aussenbogen bei r=318,5)
-    zi = Sqr(15.5 ^ 2 - (329.5 - 320) ^ 2)       ' 12,247 (Innenbogen bei r=320)
+    za = Sqr(23.5 ^ 2 - (226.5 - 210.5) ^ 2)     ' 17,212 (Aussenbogen R23,5 bei r=210,5)
+    zi = Sqr(20.5 ^ 2 - (226.5 - 213) ^ 2)       ' 15,427 (Innenbogen R20,5 bei r=213)
 
     SkizzeStarten doc, 3
     Set sm = doc.SketchManager
-    Mittellinie doc, -25, 0, 25, 0
+    Mittellinie doc, -30, 0, 30, 0
     ' rechte Wulst + Flanke
-    Linie doc, 5.5, 311, 9.5, 311
-    Linie doc, 9.5, 311, 9.5, 315.5
-    Linie doc, 9.5, 315.5, 9, 316
-    Linie doc, 9, 316, 9, 317
-    Linie doc, 9, 317, 11.5, 317
-    Linie doc, 11.5, 317, za, 318.5
-    ' Aussenbogen R18,5 ueber die Laufflaeche (gegen Uhrzeigersinn)
-    sm.CreateArc 0, 329.5 * MM, 0, za * MM, 318.5 * MM, 0, -za * MM, 318.5 * MM, 0, 1
+    Linie doc, 5.5, 203, 9.5, 203
+    Linie doc, 9.5, 203, 9.5, 207.5
+    Linie doc, 9.5, 207.5, 9, 208
+    Linie doc, 9, 208, 9, 209
+    Linie doc, 9, 209, 11.5, 209
+    Linie doc, 11.5, 209, za, 210.5
+    ' Aussenbogen R23,5 ueber die Laufflaeche (gegen Uhrzeigersinn)
+    sm.CreateArc 0, 226.5 * MM, 0, za * MM, 210.5 * MM, 0, -za * MM, 210.5 * MM, 0, 1
     ' linke Flanke + Wulst
-    Linie doc, -za, 318.5, -11.5, 317
-    Linie doc, -11.5, 317, -9, 317
-    Linie doc, -9, 317, -9, 316
-    Linie doc, -9, 316, -9.5, 315.5
-    Linie doc, -9.5, 315.5, -9.5, 311
-    Linie doc, -9.5, 311, -5.5, 311
-    Linie doc, -5.5, 311, -5.5, 317
-    Linie doc, -5.5, 317, -zi, 320
-    ' Innenbogen R15,5 (von rechts nach links gegen Uhrzeigersinn)
-    sm.CreateArc 0, 329.5 * MM, 0, zi * MM, 320 * MM, 0, -zi * MM, 320 * MM, 0, 1
-    Linie doc, zi, 320, 5.5, 317
-    Linie doc, 5.5, 317, 5.5, 311
+    Linie doc, -za, 210.5, -11.5, 209
+    Linie doc, -11.5, 209, -9, 209
+    Linie doc, -9, 209, -9, 208
+    Linie doc, -9, 208, -9.5, 207.5
+    Linie doc, -9.5, 207.5, -9.5, 203
+    Linie doc, -9.5, 203, -5.5, 203
+    Linie doc, -5.5, 203, -5.5, 210
+    Linie doc, -5.5, 210, -zi, 213
+    ' Innenbogen R20,5 (von rechts nach links gegen Uhrzeigersinn)
+    sm.CreateArc 0, 226.5 * MM, 0, zi * MM, 213 * MM, 0, -zi * MM, 213 * MM, 0, 1
+    Linie doc, zi, 213, 5.5, 210
+    Linie doc, 5.5, 210, 5.5, 203
     Set sk = SkizzeBeenden(doc, "Skizze_Mantelquerschnitt")
     Set f = Rotation(doc, sk, False)
     If f Is Nothing Then Fehler "Mantel: Rotation fehlgeschlagen": Exit Function
     f.Name = "Mantelkoerper"
 
-    Eigenschaften doc, "Mantel 37-622 (28x1.40)", "LR28-003", "NR/SBR, Nylonkarkasse"
-    ErzeugeMantel = Speichern(doc, "LR28-003_Mantel.SLDPRT")
+    Eigenschaften doc, "Mantel 47-406 (20x1.75)", "AR20-003", "NR/SBR, Nylonkarkasse"
+    ErzeugeMantel = Speichern(doc, "AR20-003_Mantel.SLDPRT")
 End Function
 
 '==============================================================================
-' BAUGRUPPE  (LR28-000)
+' BAUGRUPPE  (AR20-000)
 '==============================================================================
 Private Function ErzeugeBaugruppe(ByVal pF As String, ByVal pS As String, ByVal pM As String) As String
     Dim asm As Object, cF As Object, cS As Object, cM As Object
@@ -245,8 +245,8 @@ Private Function ErzeugeBaugruppe(ByVal pF As String, ByVal pS As String, ByVal 
     Next comp
 
     asm.EditRebuild3
-    Eigenschaften asm, "Laufrad 28"" (ohne Nabe/Speichen)", "LR28-000", "siehe Stueckliste"
-    ErzeugeBaugruppe = Speichern(asm, "LR28-000_Laufrad.SLDASM")
+    Eigenschaften asm, "Anhaengerrad 20"" (ohne Nabe/Speichen)", "AR20-000", "siehe Stueckliste"
+    ErzeugeBaugruppe = Speichern(asm, "AR20-000_Anhaengerrad.SLDASM")
 End Function
 
 Private Function EbenenDeckungsgleich(asm As Object, a As Object, b As Variant, ByVal nr As Integer) As Boolean

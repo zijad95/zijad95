@@ -1,15 +1,16 @@
-"""Erzeugt Felge, Schlauch, Mantel und die Baugruppe als STEP (AP214) mit CadQuery.
+"""Erzeugt Felge, Schlauch, Mantel und die Baugruppe (Anhaengerrad 20") als STEP mit CadQuery.
 
 Aufruf:  python erzeuge_step.py            (benoetigt: pip install cadquery)
 Ausgabe: ../cad_step/*.step
 """
+import json
 import math
 import pathlib
 
 import cadquery as cq
 
-from geometrie import (DICHTE, FELGE, MANTEL, MANTEL_PUNKTE_HALB, SCHLAUCH,
-                       felge_kontur)
+from geometrie import (DICHTE, FELGE, MANTEL, MANTEL_PUNKTE_HALB, NUMMER, RB,
+                       SCHLAUCH, felge_kontur)
 
 AUS = pathlib.Path(__file__).resolve().parent.parent / "cad_step"
 AUS.mkdir(exist_ok=True)
@@ -31,11 +32,11 @@ def felge():
     body = cq.Workplane("ZY").polyline(k).close().revolve(360, *ACHSE)
     solid = body.val()
     # Ventilloch bei +Y (90 Grad)
-    solid = solid.cut(radial_zylinder(90, FELGE["ventilloch_d"], 295, 315))
+    solid = solid.cut(radial_zylinder(90, FELGE["ventilloch_d"], RB - 16, RB + 1))
     # 36 Speichenloecher, um 5 Grad zum Ventil versetzt
     n = FELGE["speichenloecher"]
     for i in range(n):
-        solid = solid.cut(radial_zylinder(95 + i * 360 / n, FELGE["speichenloch_d"], 295, 310))
+        solid = solid.cut(radial_zylinder(95 + i * 360 / n, FELGE["speichenloch_d"], RB - 16, RB + 1))
     return solid
 
 
@@ -71,18 +72,22 @@ def main():
     teile = {"Felge": felge(), "Schlauch": schlauch(), "Mantel": mantel()}
     farben = {"Felge": cq.Color(0.75, 0.77, 0.80), "Schlauch": cq.Color(0.15, 0.15, 0.15),
               "Mantel": cq.Color(0.08, 0.08, 0.08)}
+    massen = {}
     for name, solid in teile.items():
         assert solid.isValid(), name
-        cq.exporters.export(cq.Workplane().add(solid), str(AUS / f"{name}.step"))
+        cq.exporters.export(cq.Workplane().add(solid), str(AUS / f"{NUMMER[name]}_{name}.step"))
         v = solid.Volume()
         bb = solid.BoundingBox()
-        print(f"{name:9s} V={v / 1000:8.1f} cm3  m={v / 1000 * DICHTE[name]:6.0f} g  "
+        massen[name] = round(v / 1000 * DICHTE[name])
+        print(f"{name:9s} V={v / 1000:8.1f} cm3  m={massen[name]:6d} g  "
               f"D={bb.xlen:6.1f} mm  B={bb.zlen:5.1f} mm")
+    massen["Baugruppe"] = sum(massen.values())
+    (AUS / "massen.json").write_text(json.dumps(massen, indent=1))
 
-    asm = cq.Assembly(name="Laufrad_28_Zoll")
+    asm = cq.Assembly(name="Anhaengerrad_20_Zoll")
     for name, solid in teile.items():
-        asm.add(solid, name=name, color=farben[name])
-    asm.export(str(AUS / "Laufrad_Baugruppe.step"))
+        asm.add(solid, name=f"{NUMMER[name]}_{name}", color=farben[name])
+    asm.export(str(AUS / f"{NUMMER['Baugruppe']}_Anhaengerrad_Baugruppe.step"))
 
     # Kollisionspruefung
     namen = list(teile)

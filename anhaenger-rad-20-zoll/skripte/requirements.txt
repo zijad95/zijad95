@@ -1,2 +1,3 @@
 cadquery>=2.4
 matplotlib>=3.8
+ezdxf>=1.1
