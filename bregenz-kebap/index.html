@@ -1,0 +1,915 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bregenz Kebap · Quellenstraße</title>
+<meta name="description" content="Bregenz Kebap in der Quellenstraße – frisch vom Spieß, ofenwarmes Brot, hausgemachte Saucen. Speisekarte, Öffnungszeiten und Anfahrt.">
+<meta name="theme-color" content="#0d0907">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d0907'/%3E%3Cpath d='M16 14h32l-7 36H23z' fill='%23e07a2c'/%3E%3Crect x='30.5' y='6' width='3' height='52' rx='1.5' fill='%23cfc3b5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0907;
+    --bg-2: #140e0a;
+    --card: #1b1410;
+    --card-2: #231a14;
+    --line: rgba(255, 196, 140, .12);
+    --line-strong: rgba(255, 196, 140, .24);
+    --text: #f7ede2;
+    --muted: #b9a693;
+    --fire-1: #ff5a1f;
+    --fire-2: #ff9a3c;
+    --gold: #f4c26b;
+    --green: #6fd08c;
+    --radius: 18px;
+    --max: 1180px;
+    --display: "Anton", Impact, "Arial Narrow", sans-serif;
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 400 17px/1.6 var(--sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  img, svg { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--fire-2); outline-offset: 3px; border-radius: 6px; }
+
+  .wrap { width: min(var(--max), 100% - 32px); margin-inline: auto; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font: 600 12px/1 var(--sans); letter-spacing: .28em; text-transform: uppercase;
+    color: var(--fire-2);
+  }
+  .eyebrow::before { content: ""; width: 28px; height: 1px; background: currentColor; }
+  .h2 {
+    font: 400 clamp(44px, 7vw, 88px)/.95 var(--display);
+    text-transform: uppercase; letter-spacing: .01em;
+    margin: 18px 0 0;
+  }
+  .h2 em { font: italic 600 .62em/1 var(--serif); text-transform: none; color: var(--gold); letter-spacing: 0; }
+  .lead { color: var(--muted); max-width: 560px; margin: 20px 0 0; font-size: 18px; }
+  section { position: relative; }
+
+  /* ---------- Navigation ---------- */
+  .nav {
+    position: fixed; inset: 0 0 auto; z-index: 50;
+    transition: background .4s, border-color .4s, backdrop-filter .4s;
+    border-bottom: 1px solid transparent;
+  }
+  .nav.scrolled {
+    background: rgba(13, 9, 7, .72);
+    backdrop-filter: blur(14px) saturate(1.3);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    border-color: var(--line);
+  }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .brand { display: flex; align-items: center; gap: 12px; font: 400 22px/1 var(--display); letter-spacing: .06em; text-transform: uppercase; }
+  .brand-mark { width: 34px; height: 34px; }
+  .brand small { display: block; font: 500 10px/1 var(--sans); letter-spacing: .3em; color: var(--muted); margin-top: 5px; }
+  .nav-links { display: flex; align-items: center; gap: 34px; font-size: 14px; font-weight: 500; }
+  .nav-links a:not(.btn) { color: var(--muted); transition: color .2s; position: relative; }
+  .nav-links a:not(.btn):hover { color: var(--text); }
+  .nav-links a:not(.btn)::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px;
+    background: linear-gradient(90deg, var(--fire-1), var(--fire-2));
+    transform: scaleX(0); transform-origin: left; transition: transform .3s;
+  }
+  .nav-links a:not(.btn):hover::after { transform: scaleX(1); }
+  .burger { display: none; background: none; border: 0; width: 44px; height: 44px; cursor: pointer; position: relative; }
+  .burger span, .burger::before, .burger::after {
+    content: ""; position: absolute; left: 11px; right: 11px; height: 2px; background: var(--text);
+    transition: transform .3s, opacity .3s;
+  }
+  .burger::before { top: 15px; } .burger span { top: 21px; } .burger::after { top: 27px; }
+  .nav.open .burger::before { transform: translateY(6px) rotate(45deg); }
+  .nav.open .burger span { opacity: 0; }
+  .nav.open .burger::after { transform: translateY(-6px) rotate(-45deg); }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 14px 24px; border-radius: 999px; border: 1px solid var(--line-strong);
+    font: 600 15px/1 var(--sans); cursor: pointer; white-space: nowrap;
+    transition: transform .25s, box-shadow .25s, background .25s, border-color .25s;
+  }
+  .btn:hover { transform: translateY(-2px); border-color: var(--fire-2); }
+  .btn-fire {
+    border: 0; color: #1a0b03;
+    background: linear-gradient(135deg, var(--gold), var(--fire-2) 45%, var(--fire-1));
+    box-shadow: 0 10px 30px -8px rgba(255, 106, 31, .55), inset 0 1px 0 rgba(255,255,255,.4);
+  }
+  .btn-fire:hover { box-shadow: 0 16px 40px -8px rgba(255, 106, 31, .75), inset 0 1px 0 rgba(255,255,255,.4); }
+  .btn-sm { padding: 10px 18px; font-size: 14px; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    min-height: 100svh; display: grid; align-items: center;
+    padding: 110px 0 70px; overflow: hidden; isolation: isolate;
+    background:
+      radial-gradient(60% 55% at 72% 55%, rgba(255, 106, 31, .22), transparent 70%),
+      radial-gradient(40% 40% at 15% 20%, rgba(244, 194, 107, .07), transparent 70%),
+      linear-gradient(180deg, #0a0705 0%, var(--bg) 100%);
+  }
+  #embers { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
+  .hero::after {
+    content: ""; position: absolute; inset: auto 0 0; height: 160px; z-index: -1;
+    background: linear-gradient(transparent, var(--bg));
+  }
+  .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 40px; align-items: center; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 16px 8px 12px; border-radius: 999px;
+    background: rgba(255,255,255,.04); border: 1px solid var(--line);
+    font-size: 13px; font-weight: 500; color: var(--muted);
+  }
+  .badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+  .badge.is-open .dot { background: var(--green); box-shadow: 0 0 0 0 rgba(111,208,140,.6); animation: pulse 2s infinite; }
+  .badge.is-open strong { color: var(--green); }
+  .badge.is-closed strong { color: var(--fire-2); }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 10px rgba(111,208,140,0); } 100% { box-shadow: 0 0 0 0 rgba(111,208,140,0); } }
+
+  .hero h1 { margin: 26px 0 0; text-transform: uppercase; line-height: .86; font-weight: 400; }
+  .hero h1 .l1 {
+    display: block; font: 400 clamp(64px, 12vw, 168px)/.86 var(--display); letter-spacing: .01em;
+    color: transparent; -webkit-text-stroke: 1.5px rgba(247, 237, 226, .55);
+  }
+  .hero h1 .l2 {
+    display: block; font: 400 clamp(84px, 16vw, 228px)/.86 var(--display); letter-spacing: .005em;
+    background: linear-gradient(100deg, var(--gold) 0%, var(--fire-2) 30%, var(--fire-1) 55%, var(--gold) 80%, var(--fire-2) 100%);
+    background-size: 220% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: blaze 7s linear infinite;
+    filter: drop-shadow(0 6px 40px rgba(255, 90, 31, .35));
+  }
+  @keyframes blaze { to { background-position: -220% 0; } }
+  .hero-sub {
+    margin: 26px 0 0; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    font: italic 400 clamp(20px, 2.4vw, 28px)/1.3 var(--serif); color: var(--text);
+  }
+  .hero-sub .pin { width: 22px; height: 22px; color: var(--fire-2); flex: none; }
+  .hero p.lead { margin-top: 16px; }
+  .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 36px; }
+
+  .spit-stage { position: relative; display: grid; place-items: center; }
+  .spit-stage::before {
+    content: ""; position: absolute; width: 85%; aspect-ratio: 1; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 120, 40, .45), rgba(255, 90, 31, .08) 55%, transparent 70%);
+    filter: blur(20px); animation: glow 3.2s ease-in-out infinite alternate;
+  }
+  @keyframes glow { from { opacity: .7; transform: scale(.95); } to { opacity: 1; transform: scale(1.05); } }
+  .spit { position: relative; width: min(100%, 360px); height: auto; animation: float 6s ease-in-out infinite; }
+  @keyframes float { 50% { transform: translateY(-10px); } }
+  .heat rect { animation: heat 1.8s ease-in-out infinite alternate; }
+  .heat rect:nth-child(2) { animation-delay: .3s; } .heat rect:nth-child(3) { animation-delay: .6s; }
+  .heat rect:nth-child(4) { animation-delay: .9s; } .heat rect:nth-child(5) { animation-delay: 1.2s; }
+  @keyframes heat { from { opacity: .55; } to { opacity: 1; } }
+
+  .scroll-hint {
+    position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%);
+    width: 26px; height: 42px; border: 1.5px solid var(--line-strong); border-radius: 14px;
+  }
+  .scroll-hint::after {
+    content: ""; position: absolute; left: 50%; top: 8px; width: 4px; height: 8px; margin-left: -2px;
+    background: var(--fire-2); border-radius: 2px; animation: wheel 1.8s ease-in-out infinite;
+  }
+  @keyframes wheel { 0% { opacity: 0; transform: translateY(0); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(14px); } }
+
+  /* ---------- Marquee ---------- */
+  .marquee {
+    border-block: 1px solid var(--line); overflow: hidden; padding: 22px 0;
+    background: linear-gradient(90deg, var(--bg), var(--bg-2) 50%, var(--bg));
+  }
+  .marquee-track { display: flex; width: max-content; animation: slide 38s linear infinite; }
+  .marquee span {
+    display: flex; align-items: center; gap: 34px; padding-right: 34px;
+    font: 400 clamp(26px, 3.4vw, 40px)/1 var(--display); text-transform: uppercase; letter-spacing: .04em;
+    white-space: nowrap; color: rgba(247, 237, 226, .9);
+  }
+  .marquee span i { font-style: normal; color: var(--fire-1); font-size: .6em; }
+  .marquee span b { font-weight: 400; color: transparent; -webkit-text-stroke: 1px rgba(247,237,226,.5); }
+  @keyframes slide { to { transform: translateX(-50%); } }
+
+  /* ---------- Handwerk ---------- */
+  .craft { padding: clamp(90px, 12vw, 150px) 0; }
+  .craft-head { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: end; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 64px; }
+  .step {
+    position: relative; padding: 36px 30px 34px; border-radius: var(--radius);
+    background: linear-gradient(180deg, var(--card-2), var(--card));
+    border: 1px solid var(--line); overflow: hidden;
+    transition: transform .4s, border-color .4s;
+  }
+  .step:hover { transform: translateY(-6px); border-color: var(--line-strong); }
+  .step::before {
+    content: ""; position: absolute; inset: -1px -1px auto; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--fire-2), transparent);
+    opacity: 0; transition: opacity .4s;
+  }
+  .step:hover::before { opacity: 1; }
+  .step-num {
+    position: absolute; right: 18px; top: 6px;
+    font: 400 110px/1 var(--display); color: transparent; -webkit-text-stroke: 1px rgba(255,196,140,.14);
+  }
+  .step-icon {
+    width: 58px; height: 58px; border-radius: 16px; display: grid; place-items: center;
+    background: radial-gradient(circle at 30% 25%, rgba(255,154,60,.35), rgba(255,90,31,.08));
+    border: 1px solid rgba(255,154,60,.3); color: var(--gold);
+  }
+  .step-icon svg { width: 28px; height: 28px; }
+  .step h3 { font: 400 30px/1 var(--display); text-transform: uppercase; letter-spacing: .02em; margin: 26px 0 12px; }
+  .step p { margin: 0; color: var(--muted); font-size: 16px; }
+
+  /* ---------- Speisekarte ---------- */
+  .menu {
+    padding: clamp(90px, 12vw, 150px) 0;
+    background:
+      radial-gradient(50% 40% at 50% 0%, rgba(255, 106, 31, .10), transparent 70%),
+      var(--bg-2);
+    border-block: 1px solid var(--line);
+  }
+  .menu-head { text-align: center; display: grid; justify-items: center; }
+  .menu-head .lead { text-align: center; }
+  .tabs {
+    display: flex; gap: 6px; padding: 6px; margin: 48px auto 0; width: max-content; max-width: 100%;
+    background: rgba(255,255,255,.03); border: 1px solid var(--line); border-radius: 999px;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    border: 0; background: none; cursor: pointer; padding: 12px 22px; border-radius: 999px;
+    font-weight: 600; font-size: 15px; color: var(--muted); white-space: nowrap;
+    transition: color .25s, background .25s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab[aria-selected="true"] {
+    color: #1a0b03;
+    background: linear-gradient(135deg, var(--gold), var(--fire-2) 50%, var(--fire-1));
+    box-shadow: 0 6px 20px -6px rgba(255, 106, 31, .6);
+  }
+  .menu-panel {
+    margin-top: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 56px;
+    max-width: 980px; margin-inline: auto;
+  }
+  .menu-panel.swap { animation: swapIn .5s cubic-bezier(.2,.7,.2,1); }
+  @keyframes swapIn { from { opacity: 0; transform: translateY(14px); } }
+  .dish { padding: 22px 0; border-bottom: 1px dashed var(--line-strong); }
+  .dish-top { display: flex; align-items: baseline; gap: 14px; }
+  .dish h4 { margin: 0; font-size: 19px; font-weight: 600; letter-spacing: -.005em; }
+  .dish .tag {
+    font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    padding: 4px 8px; border-radius: 6px; color: var(--fire-2); border: 1px solid rgba(255,154,60,.35);
+    transform: translateY(-2px);
+  }
+  .dish .tag.veg { color: var(--green); border-color: rgba(111,208,140,.35); }
+  .dish .fill { flex: 1; border-bottom: 1px dotted rgba(255,196,140,.25); transform: translateY(-5px); min-width: 20px; }
+  .dish .price { font: 400 24px/1 var(--display); color: var(--gold); letter-spacing: .02em; }
+  .dish p { margin: 6px 0 0; color: var(--muted); font-size: 15px; }
+
+  .sauces {
+    max-width: 980px; margin: 54px auto 0; padding: 28px 30px; border-radius: var(--radius);
+    background: var(--card); border: 1px solid var(--line);
+    display: flex; align-items: center; gap: 20px 30px; flex-wrap: wrap;
+  }
+  .sauces strong { font: 400 24px/1 var(--display); text-transform: uppercase; letter-spacing: .03em; }
+  .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+  .chip {
+    padding: 9px 16px; border-radius: 999px; font-size: 14px; font-weight: 500;
+    background: rgba(255,255,255,.03); border: 1px solid var(--line-strong);
+  }
+  .chip.hot { border-color: rgba(255,90,31,.55); color: var(--fire-2); }
+  .menu-note { text-align: center; color: var(--muted); font-size: 13px; margin-top: 26px; }
+
+  /* ---------- Statement ---------- */
+  .statement { padding: clamp(100px, 14vw, 180px) 0; text-align: center; overflow: hidden; }
+  .statement blockquote {
+    margin: 0 auto; max-width: 1000px;
+    font: italic 400 clamp(34px, 5.4vw, 72px)/1.08 var(--serif); letter-spacing: -.01em;
+  }
+  .statement blockquote span {
+    background: linear-gradient(100deg, var(--gold), var(--fire-1));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .statement .sig { margin-top: 30px; }
+  .lake { position: absolute; left: 0; right: 0; bottom: 0; height: 120px; opacity: .55; pointer-events: none; }
+  .lake path { animation: wave 9s ease-in-out infinite alternate; }
+  .lake path:nth-child(2) { animation-duration: 12s; animation-direction: alternate-reverse; }
+  @keyframes wave { to { transform: translateX(-60px); } }
+
+  /* ---------- Öffnungszeiten & Anfahrt ---------- */
+  .visit { padding: clamp(90px, 12vw, 150px) 0; background: var(--bg-2); border-top: 1px solid var(--line); }
+  .visit-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 28px; margin-top: 56px; }
+  .panel {
+    border-radius: var(--radius); background: linear-gradient(180deg, var(--card-2), var(--card));
+    border: 1px solid var(--line); padding: 34px;
+  }
+  .panel h3 { font: 400 32px/1 var(--display); text-transform: uppercase; letter-spacing: .02em; margin: 0 0 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .hours { list-style: none; margin: 0; padding: 0; }
+  .hours li {
+    display: flex; justify-content: space-between; gap: 20px; padding: 13px 14px; margin-inline: -14px;
+    border-radius: 10px; font-size: 16px; font-variant-numeric: tabular-nums;
+  }
+  .hours li + li { border-top: 1px solid var(--line); }
+  .hours li span:last-child { color: var(--muted); }
+  .hours li.today { background: rgba(255, 154, 60, .1); border-color: transparent; }
+  .hours li.today + li { border-color: transparent; }
+  .hours li.today span:first-child { font-weight: 700; color: var(--fire-2); }
+  .hours li.today span:last-child { color: var(--text); font-weight: 600; }
+  .contact { display: grid; gap: 14px; margin-top: 30px; padding-top: 26px; border-top: 1px solid var(--line); }
+  .contact-row { display: flex; align-items: center; gap: 14px; color: var(--muted); }
+  .contact-row svg { width: 20px; height: 20px; color: var(--fire-2); flex: none; }
+  .contact-row strong { color: var(--text); font-weight: 600; }
+  .map-panel { padding: 0; overflow: hidden; display: flex; flex-direction: column; min-height: 460px; }
+  .map-frame { position: relative; flex: 1; min-height: 340px; background: #1a1410; }
+  .map-frame iframe {
+    position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
+    filter: invert(.92) hue-rotate(185deg) saturate(.55) brightness(.9) contrast(.95);
+  }
+  .map-frame::after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 80px rgba(13,9,7,.8); }
+  .map-foot { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 24px 28px; flex-wrap: wrap; }
+  .map-foot .addr { font: 400 26px/1 var(--display); text-transform: uppercase; letter-spacing: .02em; }
+  .map-foot .addr small { display: block; font: 500 14px/1.4 var(--sans); color: var(--muted); letter-spacing: 0; text-transform: none; margin-top: 6px; }
+
+  /* ---------- Footer ---------- */
+  footer { padding: 70px 0 40px; border-top: 1px solid var(--line); overflow: hidden; }
+  .foot-big {
+    font: 400 clamp(60px, 15vw, 210px)/.8 var(--display); text-transform: uppercase; text-align: center;
+    color: transparent; -webkit-text-stroke: 1px rgba(255, 196, 140, .18); letter-spacing: .02em;
+    user-select: none; white-space: nowrap;
+  }
+  .foot-row { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 40px; color: var(--muted); font-size: 14px; }
+  .foot-row nav { display: flex; gap: 24px; flex-wrap: wrap; }
+  .foot-row a:hover { color: var(--text); }
+
+  /* ---------- Reveal ---------- */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal.d1 { transition-delay: .1s; } .reveal.d2 { transition-delay: .2s; } .reveal.d3 { transition-delay: .3s; }
+  .no-js .reveal { opacity: 1; transform: none; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 960px) {
+    .hero-grid { grid-template-columns: 1fr; text-align: center; }
+    .hero-grid > div:first-child { display: grid; justify-items: center; }
+    .hero-sub, .hero-cta { justify-content: center; }
+    .hero .lead { margin-inline: auto; }
+    .hero { padding-top: 104px; }
+    .spit { width: min(52vw, 230px); }
+    .craft-head, .visit-grid { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; }
+    .menu-panel { grid-template-columns: 1fr; }
+    .scroll-hint { display: none; }
+  }
+  @media (max-width: 760px) {
+    .burger { display: block; }
+    .nav-links {
+      position: fixed; inset: 72px 0 auto; flex-direction: column; align-items: stretch; gap: 0;
+      padding: 10px 16px 24px; background: rgba(13, 9, 7, .96); border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      transform: translateY(-12px); opacity: 0; pointer-events: none; transition: opacity .3s, transform .3s;
+    }
+    .nav.open .nav-links { opacity: 1; transform: none; pointer-events: auto; }
+    .nav.open { background: rgba(13, 9, 7, .96); }
+    .nav-links a:not(.btn) { padding: 16px 4px; font-size: 18px; color: var(--text); border-bottom: 1px solid var(--line); }
+    .nav-links a:not(.btn)::after { display: none; }
+    .nav-links .btn { margin-top: 18px; padding: 16px; }
+    .tabs { width: 100%; justify-content: flex-start; }
+    .panel { padding: 26px 22px; }
+    .dish h4 { font-size: 17px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body class="no-js">
+
+<!-- ======================= Navigation ======================= -->
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a href="#top" class="brand" aria-label="Bregenz Kebap – zum Seitenanfang">
+      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
+        <defs><linearGradient id="bm" x1="0" x2="1"><stop offset="0" stop-color="#7a3512"/><stop offset=".5" stop-color="#f09a4a"/><stop offset="1" stop-color="#6a2c0e"/></linearGradient></defs>
+        <rect x="30.5" y="4" width="3" height="56" rx="1.5" fill="#cfc3b5"/>
+        <path d="M14 12h36l-8 38H22z" fill="url(#bm)"/>
+        <ellipse cx="32" cy="12" rx="18" ry="3.5" fill="#f4c26b"/>
+      </svg>
+      <span>Bregenz Kebap<small>Quellenstraße</small></span>
+    </a>
+    <nav class="nav-links" id="navLinks" aria-label="Hauptnavigation">
+      <a href="#speisekarte">Speisekarte</a>
+      <a href="#handwerk">Handwerk</a>
+      <a href="#besuch">Öffnungszeiten</a>
+      <a href="#besuch">Anfahrt</a>
+      <a href="#besuch" class="btn btn-fire btn-sm" data-call>Jetzt vorbeikommen</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navLinks"><span></span></button>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ======================= Hero ======================= -->
+<section class="hero">
+  <canvas id="embers" aria-hidden="true"></canvas>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="badge reveal" id="openBadge"><span class="dot"></span><span id="openText">Öffnungszeiten werden geladen …</span></div>
+      <h1 class="reveal d1">
+        <span class="l1">Bregenz</span>
+        <span class="l2">Kebap</span>
+      </h1>
+      <div class="hero-sub reveal d2">
+        <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/></svg>
+        Quellenstraße · 6900 Bregenz
+      </div>
+      <p class="lead reveal d2">Frisch vom Spieß, knusprig aus dem Ofen, mit Saucen, für die man wiederkommt. Dein Kebap zwischen Pfänder und Bodensee.</p>
+      <div class="hero-cta reveal d3">
+        <a href="#speisekarte" class="btn btn-fire">
+          Zur Speisekarte
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#besuch" class="btn">So findest du uns</a>
+      </div>
+    </div>
+
+    <div class="spit-stage reveal d2" aria-hidden="true">
+      <svg class="spit" viewBox="0 0 300 520">
+        <defs>
+          <!-- Fleisch-Textur, die seitlich wandert und so die Drehung des Spießes simuliert -->
+          <pattern id="meat" width="64" height="400" patternUnits="userSpaceOnUse">
+            <rect width="64" height="400" fill="#9a4a1c"/>
+            <rect x="0" width="14" height="400" fill="#b9602a"/>
+            <rect x="14" width="6" height="400" fill="#7c3714"/>
+            <rect x="26" width="18" height="400" fill="#c9733a"/>
+            <rect x="44" width="5" height="400" fill="#6e2f10"/>
+            <rect x="52" width="9" height="400" fill="#d88a4a"/>
+            <animateTransform attributeName="patternTransform" type="translate" from="0 0" to="64 0" dur="2.6s" repeatCount="indefinite"/>
+          </pattern>
+          <!-- Faserige Struktur für geschichtetes Fleisch -->
+          <filter id="fibers" x="0" y="0" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency=".012 .22" numOctaves="3" seed="7"/>
+            <feColorMatrix values="0 0 0 0 .22  0 0 0 0 .08  0 0 0 0 .02  0 0 0 1.6 -.55"/>
+          </filter>
+          <linearGradient id="shade" x1="0" x2="1">
+            <stop offset="0" stop-color="#1a0802" stop-opacity=".85"/>
+            <stop offset=".22" stop-color="#1a0802" stop-opacity=".15"/>
+            <stop offset=".5" stop-color="#ffd59a" stop-opacity=".22"/>
+            <stop offset=".78" stop-color="#1a0802" stop-opacity=".2"/>
+            <stop offset="1" stop-color="#1a0802" stop-opacity=".9"/>
+          </linearGradient>
+          <linearGradient id="crisp" x1="0" x2="1">
+            <stop offset="0" stop-color="#ff7a2a" stop-opacity="0"/>
+            <stop offset=".85" stop-color="#ff7a2a" stop-opacity="0"/>
+            <stop offset="1" stop-color="#ff9a3c" stop-opacity=".75"/>
+          </linearGradient>
+          <linearGradient id="steel" x1="0" x2="1">
+            <stop offset="0" stop-color="#6d655e"/><stop offset=".5" stop-color="#e6ddd3"/><stop offset="1" stop-color="#5a524b"/>
+          </linearGradient>
+          <linearGradient id="heater" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#ffb347"/><stop offset=".5" stop-color="#ff5a1f"/><stop offset="1" stop-color="#ffb347"/>
+          </linearGradient>
+          <radialGradient id="drip" cx=".5" cy=".5" r=".5">
+            <stop offset="0" stop-color="#f4c26b" stop-opacity=".5"/><stop offset="1" stop-color="#f4c26b" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+          <clipPath id="cone"><path d="M52 78 Q150 62 248 78 L214 404 Q150 422 86 404 Z"/></clipPath>
+        </defs>
+
+        <!-- Heizelement hinten -->
+        <g class="heat">
+          <rect x="262" y="90"  width="14" height="54" rx="7" fill="url(#heater)" filter="url(#soft)"/>
+          <rect x="262" y="154" width="14" height="54" rx="7" fill="url(#heater)" filter="url(#soft)"/>
+          <rect x="262" y="218" width="14" height="54" rx="7" fill="url(#heater)" filter="url(#soft)"/>
+          <rect x="262" y="282" width="14" height="54" rx="7" fill="url(#heater)" filter="url(#soft)"/>
+          <rect x="262" y="346" width="14" height="54" rx="7" fill="url(#heater)" filter="url(#soft)"/>
+        </g>
+
+        <!-- Spieß -->
+        <rect x="145" y="14" width="10" height="490" rx="5" fill="url(#steel)"/>
+        <circle cx="150" cy="16" r="9" fill="url(#steel)"/>
+
+        <!-- Fleischkegel -->
+        <g clip-path="url(#cone)">
+          <rect x="40" y="56" width="220" height="380" fill="url(#meat)"/>
+          <rect x="40" y="56" width="220" height="380" filter="url(#fibers)" opacity=".9"/>
+          <rect x="40" y="56" width="220" height="380" fill="url(#shade)"/>
+          <rect x="40" y="56" width="220" height="380" fill="url(#crisp)"/>
+        </g>
+        <ellipse cx="150" cy="76" rx="98" ry="14" fill="#c46a30"/>
+        <ellipse cx="150" cy="74" rx="94" ry="11" fill="#e3995a"/>
+        <ellipse cx="150" cy="74" rx="11" ry="4" fill="#5a3a26"/>
+
+        <!-- Abtropfschale -->
+        <ellipse cx="150" cy="470" rx="96" ry="22" fill="url(#drip)"/>
+        <path d="M70 462 Q150 488 230 462 L222 478 Q150 500 78 478 Z" fill="url(#steel)"/>
+        <ellipse cx="150" cy="462" rx="80" ry="10" fill="#3a2e26"/>
+      </svg>
+    </div>
+  </div>
+  <a href="#handwerk" class="scroll-hint" aria-label="Weiter nach unten"></a>
+</section>
+
+<!-- ======================= Marquee ======================= -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Frisch vom Spieß <i>✦</i> <b>Knusprig</b> <i>✦</i> Ofenwarmes Brot <i>✦</i> <b>Hausgemacht</b> <i>✦</i> Dürüm <i>✦</i> <b>Falafel</b> <i>✦</i> Scharf oder mild <i>✦</i></span>
+    <span>Frisch vom Spieß <i>✦</i> <b>Knusprig</b> <i>✦</i> Ofenwarmes Brot <i>✦</i> <b>Hausgemacht</b> <i>✦</i> Dürüm <i>✦</i> <b>Falafel</b> <i>✦</i> Scharf oder mild <i>✦</i></span>
+  </div>
+</div>
+
+<!-- ======================= Handwerk ======================= -->
+<section class="craft" id="handwerk">
+  <div class="wrap">
+    <div class="craft-head">
+      <div class="reveal">
+        <span class="eyebrow">Unser Handwerk</span>
+        <h2 class="h2">Drei Dinge,<br><em>keine Kompromisse.</em></h2>
+      </div>
+      <p class="lead reveal d1">Ein guter Kebap ist keine Hexerei – aber er verzeiht keine Abkürzungen. Darum machen wir die drei wichtigsten Dinge jeden Tag richtig.</p>
+    </div>
+
+    <div class="steps">
+      <article class="step reveal">
+        <span class="step-num">01</span>
+        <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 2v20"/><path d="M6 5h12l-2.5 13h-7z"/></svg></div>
+        <h3>Der Spieß</h3>
+        <p>Langsam gedreht, außen knusprig, innen saftig. Geschnitten wird erst, wenn du bestellst.</p>
+      </article>
+      <article class="step reveal d1">
+        <span class="step-num">02</span>
+        <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M3 14c0-5 4-9 9-9s9 4 9 9v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M8 10.5l1 1M12 9.5l1 1M16 10.5l1 1"/></svg></div>
+        <h3>Das Brot</h3>
+        <p>Kurz im Ofen aufgebacken, damit es außen kracht und innen weich bleibt – so wie es sein muss.</p>
+      </article>
+      <article class="step reveal d2">
+        <span class="step-num">03</span>
+        <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 3c-3 4-6 7-6 11a6 6 0 0 0 12 0c0-4-3-7-6-11z"/><path d="M9.5 15a2.5 2.5 0 0 0 2.5 2.5"/></svg></div>
+        <h3>Die Saucen</h3>
+        <p>Knoblauch, Kräuter, scharf – frisch angerührt. Die Frage ist nur: eine oder alle?</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= Speisekarte ======================= -->
+<section class="menu" id="speisekarte">
+  <div class="wrap">
+    <div class="menu-head">
+      <span class="eyebrow reveal">Speisekarte</span>
+      <h2 class="h2 reveal d1">Was darf's <em>heute sein?</em></h2>
+      <p class="lead reveal d2">Alles frisch zubereitet – zum Mitnehmen oder direkt vor Ort.</p>
+    </div>
+
+    <div class="tabs reveal d2" role="tablist" aria-label="Kategorien" id="tabs"></div>
+    <div class="menu-panel" id="menuPanel" role="tabpanel" aria-live="polite"></div>
+
+    <div class="sauces reveal">
+      <strong>Sauce nach Wahl</strong>
+      <div class="chips">
+        <span class="chip">Knoblauch</span>
+        <span class="chip">Kräuter</span>
+        <span class="chip">Cocktail</span>
+        <span class="chip hot">Scharf 🌶</span>
+        <span class="chip hot">Extra scharf 🌶🌶</span>
+      </div>
+    </div>
+    <p class="menu-note">Alle Preise in Euro inkl. MwSt. Informationen zu Allergenen erhältst du gerne bei uns im Lokal.</p>
+  </div>
+</section>
+
+<!-- ======================= Statement ======================= -->
+<section class="statement">
+  <div class="wrap">
+    <blockquote class="reveal">„Kebap, wie er sein soll –<br><span>zwischen Pfänder und Bodensee.</span>“</blockquote>
+    <div class="sig reveal d1"><span class="eyebrow">Bregenz Kebap · Quellenstraße</span></div>
+  </div>
+  <svg class="lake" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 70 Q90 50 180 70 T360 70 T540 70 T720 70 T900 70 T1080 70 T1260 70 T1440 70 T1620 70 V120 H0Z" fill="rgba(255,154,60,.07)"/>
+    <path d="M0 90 Q90 74 180 90 T360 90 T540 90 T720 90 T900 90 T1080 90 T1260 90 T1440 90 T1620 90 V120 H0Z" fill="rgba(255,154,60,.06)"/>
+  </svg>
+</section>
+
+<!-- ======================= Öffnungszeiten & Anfahrt ======================= -->
+<section class="visit" id="besuch">
+  <div class="wrap">
+    <span class="eyebrow reveal">Besuch uns</span>
+    <h2 class="h2 reveal d1">Hunger? <em>Wir sind gleich ums Eck.</em></h2>
+
+    <div class="visit-grid">
+      <div class="panel reveal">
+        <h3>Öffnungszeiten <span class="badge" id="openBadge2"><span class="dot"></span><span id="openText2"></span></span></h3>
+        <ul class="hours" id="hours"></ul>
+        <div class="contact">
+          <div class="contact-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/></svg>
+            <span><strong id="addrLine">Quellenstraße</strong>, 6900 Bregenz</span>
+          </div>
+          <div class="contact-row" id="phoneRow" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
+            <a id="phoneLink" href="#"><strong id="phoneText"></strong></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel map-panel reveal d1">
+        <div class="map-frame">
+          <iframe id="map" title="Karte: Bregenz Kebap, Quellenstraße, Bregenz" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <div class="map-foot">
+          <div class="addr"><span id="addrBig">Quellenstraße</span><small>6900 Bregenz · Vorarlberg</small></div>
+          <a class="btn btn-fire" id="routeBtn" target="_blank" rel="noopener">
+            Route planen
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ======================= Footer ======================= -->
+<footer>
+  <div class="foot-big" aria-hidden="true">Bregenz Kebap</div>
+  <div class="wrap foot-row">
+    <span>© <span id="year"></span> Bregenz Kebap · Quellenstraße · 6900 Bregenz</span>
+    <nav aria-label="Fußzeile">
+      <a href="#speisekarte">Speisekarte</a>
+      <a href="#besuch">Öffnungszeiten</a>
+      <a href="#besuch">Anfahrt</a>
+      <a href="#" id="impressumLink">Impressum</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+/* =====================================================================
+   HIER ANPASSEN – alle Inhalte, die sich ändern können, stehen an einem Ort.
+   ===================================================================== */
+const CONFIG = {
+  // Hausnummer ergänzen, z. B. "Quellenstraße 12"
+  street: "Quellenstraße",
+  city: "6900 Bregenz",
+  // Telefonnummer eintragen, z. B. "+43 5574 123456" – leer = wird ausgeblendet
+  phone: "",
+  // Link zum Impressum (in Österreich Pflicht) – leer = Link wird ausgeblendet
+  impressumUrl: "",
+  // Öffnungszeiten: 0 = Sonntag, 1 = Montag … 6 = Samstag.
+  // null = Ruhetag. Schließzeit nach Mitternacht ist erlaubt (z. B. ["11:00", "01:00"]).
+  hours: {
+    1: ["10:30", "23:00"],
+    2: ["10:30", "23:00"],
+    3: ["10:30", "23:00"],
+    4: ["10:30", "23:00"],
+    5: ["10:30", "01:00"],
+    6: ["11:00", "01:00"],
+    0: ["12:00", "22:00"],
+  },
+};
+
+// Speisekarte: tag = kleines Label (optional), veg = vegetarisch
+const MENU = [
+  { name: "Kebap & Dürüm", items: [
+    { n: "Döner Kebap", d: "Kalb oder Hähnchen im ofenwarmen Brot, frischer Salat, Sauce nach Wahl", p: 7.5, tag: "Klassiker" },
+    { n: "Dürüm Kebap", d: "Im dünnen Yufka-Fladen gerollt – perfekt für unterwegs", p: 8.0 },
+    { n: "Kebap Spezial", d: "Doppelt Fleisch, Käse, gegrilltes Gemüse und Sauce", p: 9.5, tag: "Hunger" },
+    { n: "Dürüm Spezial", d: "Mit Käse und Pommes direkt im Wrap", p: 9.5 },
+    { n: "Lahmacun", d: "Dünner, knuspriger Teig mit würziger Hackfleischauflage, Salat und Zitrone", p: 7.0 },
+    { n: "Lahmacun mit Kebap", d: "Gerollt und gefüllt mit Kebapfleisch und Salat", p: 9.5 },
+  ]},
+  { name: "Teller & Boxen", items: [
+    { n: "Kebap Teller", d: "Fleisch vom Spieß mit Pommes oder Reis, Salat und Sauce", p: 13.5, tag: "Beliebt" },
+    { n: "Iskender", d: "Auf Fladenbrot mit Tomatensauce, zerlassener Butter und Joghurt", p: 15.0 },
+    { n: "Kebap Box", d: "Kebapfleisch auf knusprigen Pommes, mit Sauce", p: 7.5 },
+    { n: "Gemischter Grillteller", d: "Kebap, Köfte und Hähnchen mit Reis und Salat", p: 16.5 },
+  ]},
+  { name: "Vegetarisch", items: [
+    { n: "Falafel im Brot", d: "Hausgemachte Falafel, Salat, Hummus und Sauce", p: 7.0, veg: true },
+    { n: "Falafel Dürüm", d: "Falafel, frisches Gemüse und Sauce im Yufka-Fladen", p: 7.5, veg: true },
+    { n: "Halloumi im Brot", d: "Gegrillter Halloumi mit Salat und Kräutersauce", p: 8.0, veg: true },
+    { n: "Falafel Teller", d: "Mit Reis oder Pommes, Hummus und Salat", p: 12.5, veg: true },
+  ]},
+  { name: "Beilagen & Drinks", items: [
+    { n: "Pommes", d: "Klein oder groß, mit Ketchup oder Mayo", p: 3.5 },
+    { n: "Gemischter Salat", d: "Mit Schafskäse und Dressing", p: 6.5, veg: true },
+    { n: "Ayran", d: "Hausgemacht, eiskalt", p: 2.5 },
+    { n: "Softdrinks 0,5 l", d: "Cola, Fanta, Sprite, Eistee", p: 3.0 },
+    { n: "Çay", d: "Türkischer Tee im Tulpenglas", p: 1.5 },
+    { n: "Baklava", d: "Mit Pistazien, zum Abschluss", p: 3.5 },
+  ]},
+];
+
+/* ===================================================================== */
+
+document.body.classList.remove("no-js");
+document.getElementById("year").textContent = new Date().getFullYear();
+
+/* ---------- Navigation ---------- */
+const nav = document.getElementById("nav");
+const burger = document.getElementById("burger");
+const onScroll = () => nav.classList.toggle("scrolled", window.scrollY > 30);
+window.addEventListener("scroll", onScroll, { passive: true });
+onScroll();
+burger.addEventListener("click", () => {
+  const open = nav.classList.toggle("open");
+  burger.setAttribute("aria-expanded", open);
+  burger.setAttribute("aria-label", open ? "Menü schließen" : "Menü öffnen");
+});
+document.querySelectorAll(".nav-links a").forEach(a => a.addEventListener("click", () => {
+  nav.classList.remove("open");
+  burger.setAttribute("aria-expanded", "false");
+}));
+
+/* ---------- Adresse, Telefon, Karte ---------- */
+const fullAddr = `${CONFIG.street}, ${CONFIG.city}`;
+document.getElementById("addrLine").textContent = CONFIG.street;
+document.getElementById("addrBig").textContent = CONFIG.street;
+const q = encodeURIComponent(`Bregenz Kebap, ${fullAddr}, Österreich`);
+document.getElementById("map").src = `https://maps.google.com/maps?q=${encodeURIComponent(fullAddr + ", Österreich")}&z=16&output=embed`;
+document.getElementById("routeBtn").href = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
+if (CONFIG.phone) {
+  const tel = "tel:" + CONFIG.phone.replace(/[^\d+]/g, "");
+  document.getElementById("phoneRow").hidden = false;
+  document.getElementById("phoneText").textContent = CONFIG.phone;
+  document.getElementById("phoneLink").href = tel;
+  const cta = document.querySelector("[data-call]");
+  cta.textContent = "Jetzt anrufen";
+  cta.href = tel;
+}
+const imp = document.getElementById("impressumLink");
+if (CONFIG.impressumUrl) imp.href = CONFIG.impressumUrl; else imp.remove();
+
+/* ---------- Öffnungszeiten + „Jetzt geöffnet“ ---------- */
+const DAYS = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+const ORDER = [1, 2, 3, 4, 5, 6, 0];
+const toMin = t => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+
+function viennaNow() {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Vienna", weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+  }).formatToParts(new Date());
+  const get = type => parts.find(p => p.type === type).value;
+  const day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(get("weekday"));
+  return { day, min: Number(get("hour")) * 60 + Number(get("minute")) };
+}
+
+function status() {
+  const { day, min } = viennaNow();
+  const today = CONFIG.hours[day];
+  const prev = CONFIG.hours[(day + 6) % 7];
+  // Spätschicht vom Vortag (über Mitternacht)
+  if (prev && toMin(prev[1]) < toMin(prev[0]) && min < toMin(prev[1])) return { open: true, until: prev[1], day };
+  if (today) {
+    const o = toMin(today[0]), c = toMin(today[1]);
+    const overnight = c < o;
+    if (min >= o && (overnight || min < c)) return { open: true, until: today[1], day };
+    if (min < o) return { open: false, next: `heute ab ${today[0]}`, day };
+  }
+  for (let i = 1; i <= 7; i++) {
+    const d = (day + i) % 7;
+    if (CONFIG.hours[d]) return { open: false, next: `${i === 1 ? "morgen" : DAYS[d]} ab ${CONFIG.hours[d][0]}`, day };
+  }
+  return { open: false, next: "", day };
+}
+
+function renderHours() {
+  const s = status();
+  const list = document.getElementById("hours");
+  list.innerHTML = ORDER.map(d => {
+    const h = CONFIG.hours[d];
+    return `<li class="${d === s.day ? "today" : ""}"><span>${DAYS[d]}</span><span>${h ? `${h[0]} – ${h[1]} Uhr` : "Ruhetag"}</span></li>`;
+  }).join("");
+  const long = s.open ? `<strong>Jetzt geöffnet</strong> · bis ${s.until} Uhr` : `<strong>Geschlossen</strong>${s.next ? " · " + s.next + " Uhr" : ""}`;
+  const short = s.open ? "<strong>Geöffnet</strong>" : "<strong>Geschlossen</strong>";
+  for (const [badge, text, html] of [["openBadge", "openText", long], ["openBadge2", "openText2", short]]) {
+    const b = document.getElementById(badge);
+    b.classList.toggle("is-open", s.open);
+    b.classList.toggle("is-closed", !s.open);
+    document.getElementById(text).innerHTML = html;
+  }
+}
+renderHours();
+setInterval(renderHours, 60_000);
+
+/* ---------- Speisekarte ---------- */
+const tabs = document.getElementById("tabs");
+const panel = document.getElementById("menuPanel");
+const euro = new Intl.NumberFormat("de-AT", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function showCategory(i, animate) {
+  tabs.querySelectorAll(".tab").forEach((t, j) => {
+    t.setAttribute("aria-selected", i === j);
+    t.tabIndex = i === j ? 0 : -1;
+  });
+  panel.setAttribute("aria-labelledby", `tab-${i}`);
+  panel.innerHTML = MENU[i].items.map(it => `
+    <div class="dish">
+      <div class="dish-top">
+        <h4>${esc(it.n)}</h4>
+        ${it.veg ? '<span class="tag veg">Veggie</span>' : it.tag ? `<span class="tag">${esc(it.tag)}</span>` : ""}
+        <span class="fill"></span>
+        <span class="price">${euro.format(it.p)}</span>
+      </div>
+      <p>${esc(it.d)}</p>
+    </div>`).join("");
+  if (animate) { panel.classList.remove("swap"); void panel.offsetWidth; panel.classList.add("swap"); }
+}
+tabs.innerHTML = MENU.map((c, i) => `<button class="tab" role="tab" id="tab-${i}" aria-controls="menuPanel">${esc(c.name)}</button>`).join("");
+tabs.querySelectorAll(".tab").forEach((t, i) => {
+  t.addEventListener("click", () => showCategory(i, true));
+  t.addEventListener("keydown", e => {
+    const dir = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    if (!dir) return;
+    const n = (i + dir + MENU.length) % MENU.length;
+    showCategory(n, true);
+    tabs.children[n].focus();
+  });
+});
+showCategory(0, false);
+
+/* ---------- Scroll-Reveal ---------- */
+const io = new IntersectionObserver(entries => entries.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+}), { threshold: .15, rootMargin: "0px 0px -40px 0px" });
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+/* ---------- Glut-Funken im Hero ---------- */
+(() => {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const canvas = document.getElementById("embers");
+  const ctx = canvas.getContext("2d");
+  let w, h, dpr, sparks = [], running = true;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = canvas.clientWidth; h = canvas.clientHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const target = Math.round(Math.min(90, w / 14));
+    while (sparks.length < target) sparks.push(spawn(true));
+    sparks.length = target;
+  }
+  function spawn(anywhere) {
+    // Funken entstehen bevorzugt rechts beim Spieß
+    const nearSpit = Math.random() < .55 && w > 960;
+    return {
+      x: nearSpit ? w * (.62 + Math.random() * .25) : Math.random() * w,
+      y: anywhere ? Math.random() * h : h + 10,
+      r: .6 + Math.random() * 2.2,
+      vy: .35 + Math.random() * 1.1,
+      vx: (Math.random() - .5) * .3,
+      phase: Math.random() * Math.PI * 2,
+      life: 0, max: 260 + Math.random() * 380,
+      hue: 18 + Math.random() * 26,
+    };
+  }
+  function tick() {
+    if (!running) return;
+    ctx.clearRect(0, 0, w, h);
+    ctx.globalCompositeOperation = "lighter";
+    for (let i = 0; i < sparks.length; i++) {
+      const s = sparks[i];
+      s.life++; s.phase += .03;
+      s.y -= s.vy; s.x += s.vx + Math.sin(s.phase) * .35;
+      const t = s.life / s.max;
+      if (t >= 1 || s.y < -10) { sparks[i] = spawn(false); continue; }
+      const a = Math.sin(Math.PI * t) * .9;
+      const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 4);
+      g.addColorStop(0, `hsla(${s.hue + 15}, 100%, 75%, ${a})`);
+      g.addColorStop(.35, `hsla(${s.hue}, 100%, 55%, ${a * .5})`);
+      g.addColorStop(1, `hsla(${s.hue}, 100%, 50%, 0)`);
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 4, 0, Math.PI * 2); ctx.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+  let inView = true;
+  const update = () => {
+    const was = running; running = inView && !document.hidden;
+    if (running && !was) requestAnimationFrame(tick);
+  };
+  new IntersectionObserver(([e]) => { inView = e.isIntersecting; update(); }).observe(canvas);
+  document.addEventListener("visibilitychange", update);
+  window.addEventListener("resize", resize);
+  resize();
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
